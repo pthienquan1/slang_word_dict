@@ -18,12 +18,12 @@ public class SearchSlang extends JFrame {
     private JTextArea resultArea;
 
     private List<SlangWord> slangWordList;
-
+    private List<String> searchHistory;
     public SearchSlang(List<SlangWord> slangWordList) {
         super("Slang Dictionary");
 
         this.slangWordList = slangWordList;
-
+        searchHistory = new ArrayList<>();
         // Create components
         JPanel panel = new JPanel();
         JLabel searchLabel = new JLabel("Search: ");
@@ -72,5 +72,9 @@ public class SearchSlang extends JFrame {
         }
 
         resultArea.setText(result.toString());
+        searchHistory.add(searchTerm);
+    }
+    public void setSearchHistory(List<String> searchHistory) {
+        this.searchHistory = searchHistory;
     }
 }

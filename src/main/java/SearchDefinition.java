@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,10 +12,11 @@ import java.util.List;
  */
 public class SearchDefinition extends JFrame {
     private JTextArea resultTextArea;
+    private List<String> searchHistory;
 
-    public SearchDefinition(List<SlangWord> slangWordList) {
+    public SearchDefinition(List<SlangWord> slangWordList, List<String> searchHistory) {
         super("Search Definition");
-
+        this.searchHistory = searchHistory;
         // Create components
         JPanel panel = new JPanel();
         JTextField searchField = new JTextField(20);
@@ -52,30 +54,37 @@ public class SearchDefinition extends JFrame {
         boolean foundMatch = false;
 
         for (SlangWord slangWord : slangWordList) {
-            if (slangWord.getWord().equals(searchQuery)) {
-                result.append(slangWord.getWord()).append(":").append("\n");
+            if ( slangWord.getWord().equals(searchQuery) ) {
+                result.append("Slang word: ").append(slangWord.getWord()).append(":").append("\n");
                 for (String definition : slangWord.getDefinition()) {
-                    result.append("- ").append(definition).append("\n");
+                    result.append("Definition you searched: ").append(definition).append("\n");
                 }
                 foundMatch = true;
                 break;
             }
 
             for (String definition : slangWord.getDefinition()) {
-                if (definition.toLowerCase().contains(searchQuery.toLowerCase())) {
-                    result.append(slangWord.getWord()).append(":").append("\n");
-                    result.append("- ").append(definition).append("\n");
+                if ( definition.toLowerCase().contains(searchQuery.toLowerCase()) ) {
+                    result.append("Slang word: ").append(slangWord.getWord()).append(":").append("\n");
+                    result.append("Definition you searched: ").append(definition).append("\n");
                     foundMatch = true;
                     break;
                 }
             }
         }
 
-        if (!foundMatch) {
+
+        if ( !foundMatch ) {
             result.append("No matching words found.");
         }
 
         resultTextArea.setText(result.toString());
         resultTextArea.setCaretPosition(0);
+        searchHistory.add(searchQuery);
+
+    }
+
+    public void setSearchHistory(List<String> searchHistory) {
+        this.searchHistory = searchHistory;
     }
 }

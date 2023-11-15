@@ -15,21 +15,24 @@ import java.util.List;
  */
 public class SlangDictionaryMenu extends JFrame {
     private List<SlangWord> slangWordList;
-
+    private List<String> searchHistorySlangWord;
+    private static List<String> searchHistoryDefinition;
     public SlangDictionaryMenu() {
         super("Slang Dictionary Menu");
 
         // Load slang words from the file
         slangWordList = loadSlangWords("slang.txt");
-
+        searchHistorySlangWord = new ArrayList<>();
+        searchHistoryDefinition = new ArrayList<>();
         // Create components
         JPanel panel = new JPanel();
         JButton searchSlangButton = new JButton("SearchSlang");
         JButton searchDefinitionButton = new JButton("Search Definition");
-
+        JButton historyButton = new JButton("Search History");
         // Add components to the panel
         panel.add(searchSlangButton);
         panel.add(searchDefinitionButton);
+        panel.add(historyButton);
 
         // Set layout manager for the frame
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -39,13 +42,23 @@ public class SlangDictionaryMenu extends JFrame {
         searchSlangButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new SearchSlang(slangWordList);
+                SearchSlang searchSlang = new SearchSlang(slangWordList);
+                searchSlang.setSearchHistory(searchHistorySlangWord);
             }
         });
         searchDefinitionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new SearchDefinition(slangWordList);
+                SearchDefinition searchDefinition = new SearchDefinition(slangWordList, searchHistoryDefinition);
+                searchDefinition.setSearchHistory(searchHistoryDefinition);
+
+            }
+        });
+
+        historyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new HistorySearch(searchHistorySlangWord,searchHistoryDefinition);
             }
         });
 
@@ -81,6 +94,8 @@ public class SlangDictionaryMenu extends JFrame {
 
         return slangWords;
     }
+
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
