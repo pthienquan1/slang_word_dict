@@ -30,12 +30,13 @@ public class SlangDictionaryMenu extends JFrame {
         JButton searchDefinitionButton = new JButton("Search Definition");
         JButton historyButton = new JButton("Search History");
         JButton addSlangButton = new JButton("Add Slang");
-
+        JButton editButton = new JButton("Edit Slang word");
         // Add components to the panel
         panel.add(searchSlangButton);
         panel.add(searchDefinitionButton);
         panel.add(historyButton);
         panel.add(addSlangButton);
+        panel.add(editButton);
         // Set layout manager for the frame
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         add(panel);
@@ -69,6 +70,12 @@ public class SlangDictionaryMenu extends JFrame {
                 new AddSlangWord();
             }
         });
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new EditSlangWord(slangWordList);
+            }
+        });
 
         // Set frame properties
         setPreferredSize(new Dimension(600, 400));
@@ -78,7 +85,7 @@ public class SlangDictionaryMenu extends JFrame {
         setVisible(true);
     }
 
-    private List<SlangWord> loadSlangWords(String filename) {
+    static List<SlangWord> loadSlangWords(String filename) {
         List<SlangWord> slangWords = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
