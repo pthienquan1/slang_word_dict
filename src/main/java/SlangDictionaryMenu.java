@@ -14,7 +14,7 @@ import java.util.List;
  * Description: ...
  */
 public class SlangDictionaryMenu extends JFrame {
-    private List<SlangWord> slangWordList;
+    protected static List<SlangWord> slangWordList;
     private List<String> searchHistorySlangWord;
     private static List<String> searchHistoryDefinition;
     public SlangDictionaryMenu() {
@@ -29,11 +29,13 @@ public class SlangDictionaryMenu extends JFrame {
         JButton searchSlangButton = new JButton("SearchSlang");
         JButton searchDefinitionButton = new JButton("Search Definition");
         JButton historyButton = new JButton("Search History");
+        JButton addSlangButton = new JButton("Add Slang");
+
         // Add components to the panel
         panel.add(searchSlangButton);
         panel.add(searchDefinitionButton);
         panel.add(historyButton);
-
+        panel.add(addSlangButton);
         // Set layout manager for the frame
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         add(panel);
@@ -61,7 +63,12 @@ public class SlangDictionaryMenu extends JFrame {
                 new HistorySearch(searchHistorySlangWord,searchHistoryDefinition);
             }
         });
-
+        addSlangButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new AddSlangWord();
+            }
+        });
 
         // Set frame properties
         setPreferredSize(new Dimension(600, 400));
