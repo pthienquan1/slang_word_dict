@@ -31,12 +31,14 @@ public class SlangDictionaryMenu extends JFrame {
         JButton historyButton = new JButton("Search History");
         JButton addSlangButton = new JButton("Add Slang");
         JButton editButton = new JButton("Edit Slang word");
+        JButton deleteButton = new JButton("Delete Slang word");
         // Add components to the panel
         panel.add(searchSlangButton);
         panel.add(searchDefinitionButton);
         panel.add(historyButton);
         panel.add(addSlangButton);
         panel.add(editButton);
+        panel.add(deleteButton);
         // Set layout manager for the frame
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         add(panel);
@@ -74,6 +76,12 @@ public class SlangDictionaryMenu extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new EditSlangWord(slangWordList);
+            }
+        });
+        deleteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new DeleteSlangWord(slangWordList);
             }
         });
 

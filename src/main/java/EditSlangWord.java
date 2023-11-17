@@ -16,7 +16,8 @@ public class EditSlangWord extends JFrame {
     private JTextField searchField;
     private JTextArea resultArea;
     private JTextField slangWordTextField;
-    private List<JTextField> definitionTextFields;
+    private JTextField newSlangWordTextField; // New JTextField for editing slang word
+    private JTextArea definitionTextArea;
     private JButton editButton;
 
     private List<SlangWord> slangWordList;
@@ -49,19 +50,16 @@ public class EditSlangWord extends JFrame {
         resultArea.setEditable(false);
         JScrollPane resultScrollPane = new JScrollPane(resultArea);
 
-        JLabel slangWordLabel = new JLabel("Slang Word:");
+        JLabel slangWordLabel = new JLabel("Current Slang Word:");
         slangWordTextField = new JTextField(20);
         slangWordTextField.setEditable(false);
 
-        JLabel definitionLabel = new JLabel("Definition:");
-        definitionTextFields = new ArrayList<>();
-        for (int i = 0; i < 5; i++) { // Maximum number of definition text fields (adjust as needed)
-            JTextField definitionTextField = new JTextField(20);
-            definitionTextField.setEditable(false);
-            definitionTextFields.add(definitionTextField);
-        }
+        JLabel newSlangWordLabel = new JLabel("New Slang Word:");
+        newSlangWordTextField = new JTextField(20);
 
-        JScrollPane definitionScrollPane = new JScrollPane(definitionTextFields.get(0));
+        JLabel definitionLabel = new JLabel("Definitions:");
+        definitionTextArea = new JTextArea(5, 30);
+        JScrollPane definitionScrollPane = new JScrollPane(definitionTextArea);
 
         editButton = new JButton("Edit");
         editButton.addActionListener(new ActionListener() {
@@ -81,15 +79,16 @@ public class EditSlangWord extends JFrame {
 
         constraints.gridx = 0;
         constraints.gridy = 1;
-        constraints.gridwidth = 3;
-        panel.add(resultScrollPane, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 2;
         constraints.gridwidth = 1;
         panel.add(slangWordLabel, constraints);
         constraints.gridx = 1;
         panel.add(slangWordTextField, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        panel.add(newSlangWordLabel, constraints);
+        constraints.gridx = 1;
+        panel.add(newSlangWordTextField, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 3;
@@ -112,79 +111,86 @@ public class EditSlangWord extends JFrame {
     private void performSearch() {
         String searchTerm = searchField.getText().trim().toUpperCase();
         StringBuilder result = new StringBuilder();
+        boolean found = false;
 
         for (SlangWord slangWord : slangWordList) {
-            if ( slangWord.getWord().toUpperCase().equals(searchTerm) ) {
+            if (slangWord.getWord().equalsIgnoreCase(searchTerm)) {
                 slangWordTextField.setText(slangWord.getWord());
+                newSlangWordTextField.setText(slangWord.getWord());
 
                 List<String> definitions = slangWord.getDefinition();
                 result.append("Definitions: ").append(String.join(", ", definitions)).append("\n");
-                int numDefinitions = Math.min(definitions.size(), definitionTextFields.size());
-
-                for (int i = 0; i < numDefinitions; i++) {
-                    JTextField definitionTextField = definitionTextFields.get(i);
-                    definitionTextField.setEditable(true);
-                    definitionTextField.setText(definitions.get(i));
-                }
-
-                for (int i = numDefinitions; i < definitionTextFields.size(); i++) {
-                    JTextField definitionTextField = definitionTextFields.get(i);
-                    definitionTextField.setEditable(false);
-                    definitionTextField.setText("");
-                }
+                definitionTextArea.setText(String.join("\n", addDashes(definitions)));
 
                 selectedSlangWord = slangWord;
                 editButton.setEnabled(true);
+                found = true;
                 break;
             }
         }
 
-        if ( result.length() == 0 ) {
-            result.append("No matching word found.");
+        if (!found) {
+            JOptionPane.showMessageDialog(this, "No matching word found.", "Not Found", JOptionPane.INFORMATION_MESSAGE);
             editButton.setEnabled(false);
+            resultArea.setText("");
+            slangWordTextField.setText("");
+            newSlangWordTextField.setText("");
+            definitionTextArea.setText("");
+        } else {
+            resultArea.setText(result.toString());
         }
+    }
 
-        resultArea.setText(result.toString());
+    private List<String> addDashes(List<String> definitions) {
+        List<String> definitionsWithDashes = new ArrayList<>();
+        for (String definition : definitions) {
+            definitionsWithDashes.add("- " + definition);
+        }
+        return definitionsWithDashes;
     }
 
     private void editSlangWord() {
+        String newSlangWord = newSlangWordTextField.getText().trim();
         List<String> newDefinitions = new ArrayList<>();
-        for (JTextField definitionTextField : definitionTextFields) {
-            String definition = definitionTextField.getText().trim();
-            if ( !definition.isEmpty() ) {
-                newDefinitions.add(definition);
+        String[] definitionLines = definitionTextArea.getText().split("\n");
+
+        for (String definition : definitionLines) {
+            String trimmedDefinition = definition.trim();
+            if (!trimmedDefinition.isEmpty()) {
+                newDefinitions.add(trimmedDefinition.substring(2)); // Remove the leading "-"
             }
         }
 
-        if ( selectedSlangWord != null && !newDefinitions.isEmpty() ) {
+        if (!newSlangWord.isEmpty() && !newDefinitions.isEmpty()) {
+            selectedSlangWord.setWord(newSlangWord);
             selectedSlangWord.setDefinition(newDefinitions);
 
-            try {
-                FileWriter fileWriter = new FileWriter("slang.txt");
-                PrintWriter printWriter = new PrintWriter(fileWriter);
-
+            try (PrintWriter printWriter = new PrintWriter(new FileWriter("slang.txt"))) {
                 for (SlangWord slangWord : slangWordList) {
-                    printWriter.println(slangWord.getWord() + "|" + String.join("|", slangWord.getDefinition()));
+                    printWriter.print(slangWord.getWord() + "`");
+                    printWriter.println(String.join("|", slangWord.getDefinition()));
                 }
-
-                printWriter.close();
-                fileWriter.close();
 
                 JOptionPane.showMessageDialog(this, "Slang word edited successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Error occurred while editing slang word.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
-            JScrollPane definitionScrollPane = new JScrollPane(definitionTextFields.get(0));
             searchField.setText("");
             resultArea.setText("");
             slangWordTextField.setText("");
-            for (JTextField definitionTextField : definitionTextFields) {
-                definitionTextField.setText("");
-                definitionTextField.setEditable(false);
-            }
+            newSlangWordTextField.setText("");
+            definitionTextArea.setText("");
             editButton.setEnabled(false);
         }
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new EditSlangWord(new ArrayList<>());
+            }
+        });
+    }
 }
