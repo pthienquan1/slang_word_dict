@@ -16,7 +16,7 @@ public class EditSlangWord extends JFrame {
     private JTextField searchField;
     private JTextArea resultArea;
     private JTextField slangWordTextField;
-    private JTextField newSlangWordTextField; // New JTextField for editing slang word
+    private JTextField newSlangWordTextField;
     private JTextArea definitionTextArea;
     private JButton editButton;
 
@@ -113,7 +113,7 @@ public class EditSlangWord extends JFrame {
         StringBuilder result = new StringBuilder();
         boolean found = false;
 
-        for (SlangWord slangWord : slangWordList) {
+        for (SlangWord slangWord : SlangDictionaryMenu.slangWordMap.values()) {
             if (slangWord.getWord().equalsIgnoreCase(searchTerm)) {
                 slangWordTextField.setText(slangWord.getWord());
                 newSlangWordTextField.setText(slangWord.getWord());
@@ -157,7 +157,7 @@ public class EditSlangWord extends JFrame {
         for (String definition : definitionLines) {
             String trimmedDefinition = definition.trim();
             if (!trimmedDefinition.isEmpty()) {
-                newDefinitions.add(trimmedDefinition.substring(2)); // Remove the leading "-"
+                newDefinitions.add(trimmedDefinition.substring(2));
             }
         }
 
@@ -166,7 +166,7 @@ public class EditSlangWord extends JFrame {
             selectedSlangWord.setDefinition(newDefinitions);
 
             try (PrintWriter printWriter = new PrintWriter(new FileWriter("slang.txt"))) {
-                for (SlangWord slangWord : slangWordList) {
+                for (SlangWord slangWord : SlangDictionaryMenu.slangWordMap.values()) {
                     printWriter.print(slangWord.getWord() + "`");
                     printWriter.println(String.join("|", slangWord.getDefinition()));
                 }
@@ -185,12 +185,5 @@ public class EditSlangWord extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new EditSlangWord(new ArrayList<>());
-            }
-        });
-    }
+
 }

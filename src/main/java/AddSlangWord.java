@@ -2,11 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 /**
  * Created by Phan Thiên Quân - 19127527
  * Date 11/16/2023 - 11:25 AM
@@ -16,6 +17,7 @@ public class AddSlangWord extends JFrame {
     private JTextField wordTextField;
     private List<JTextField> definitionTextFields;
     private JPanel definitionsPanel;
+
     public AddSlangWord() {
         super("Add Slang Word");
 
@@ -34,7 +36,6 @@ public class AddSlangWord extends JFrame {
 
         JButton addDefinitionButton = new JButton("Add 1 more definition");
         JButton addButton = new JButton("Add Slang");
-
 
         // Add components to the panel
         constraints.gridx = 0;
@@ -86,7 +87,7 @@ public class AddSlangWord extends JFrame {
                     return;
                 }
 
-                boolean wordExists = checkWordExists(word);
+                boolean wordExists = SlangDictionaryMenu.slangWordMap.containsKey(word);
                 if (wordExists) {
                     int choice = JOptionPane.showConfirmDialog(AddSlangWord.this,
                             "The slang word already exists. Do you want to overwrite it?",
@@ -117,6 +118,7 @@ public class AddSlangWord extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
     }
+
     private void addDefinitionField() {
         GridBagConstraints fieldConstraints = new GridBagConstraints();
         fieldConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -128,33 +130,22 @@ public class AddSlangWord extends JFrame {
         definitionTextFields.add(definitionTextField);
         definitionsPanel.add(definitionTextField, fieldConstraints);
     }
-    private boolean checkWordExists(String word) {
-        for (SlangWord slangWord : SlangDictionaryMenu.slangWordList) {
-            if (slangWord.getWord().equalsIgnoreCase(word)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void overwriteSlangWord(String word, List<String> definitions) {
-        for (SlangWord slangWord : SlangDictionaryMenu.slangWordList) {
-            if (slangWord.getWord().equalsIgnoreCase(word)) {
-                slangWord.setDefinition(definitions);
-                break;
-            }
-        }
+        SlangWord existingSlangWord = SlangDictionaryMenu.slangWordMap.get(word);
+        existingSlangWord.setDefinition(definitions);
         saveSlangWords("slang.txt");
     }
 
     private void addNewSlangWord(String word, List<String> definitions) {
-        SlangDictionaryMenu.slangWordList.add(new SlangWord(word, definitions));
+        SlangWord newSlangWord = new SlangWord(word, definitions);
+        SlangDictionaryMenu.slangWordMap.put(word, newSlangWord);
         saveSlangWords("slang.txt");
     }
 
     private void saveSlangWords(String filename) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            for (SlangWord slangWord : SlangDictionaryMenu.slangWordList) {
+            for (SlangWord slangWord : SlangDictionaryMenu.slangWordMap.values()) {
                 writer.write(slangWord.getWord() + "`" + String.join("|", slangWord.getDefinition()));
                 writer.newLine();
             }

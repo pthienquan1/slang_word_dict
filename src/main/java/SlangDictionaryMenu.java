@@ -6,7 +6,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Phan Thiên Quân - 19127527
@@ -14,14 +16,14 @@ import java.util.List;
  * Description: ...
  */
 public class SlangDictionaryMenu extends JFrame {
-    protected static List<SlangWord> slangWordList;
+    protected static Map<String, SlangWord> slangWordMap;
     private List<String> searchHistorySlangWord;
     private static List<String> searchHistoryDefinition;
     public SlangDictionaryMenu() {
         super("Slang Dictionary Menu");
 
         // Load slang words from the file
-        slangWordList = loadSlangWords("slang.txt");
+        slangWordMap = loadSlangWords("slang.txt");
         searchHistorySlangWord = new ArrayList<>();
         searchHistoryDefinition = new ArrayList<>();
         // Create components
@@ -47,18 +49,19 @@ public class SlangDictionaryMenu extends JFrame {
         searchSlangButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SearchSlang searchSlang = new SearchSlang(slangWordList);
+                SearchSlang searchSlang = new SearchSlang(new ArrayList<>(slangWordMap.values()));
                 searchSlang.setSearchHistory(searchHistorySlangWord);
             }
         });
         searchDefinitionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SearchDefinition searchDefinition = new SearchDefinition(slangWordList, searchHistoryDefinition);
-                searchDefinition.setSearchHistory(searchHistoryDefinition);
+               new SearchDefinition(slangWordMap, searchHistoryDefinition);
+
 
             }
         });
+
 
         historyButton.addActionListener(new ActionListener() {
             @Override
@@ -75,13 +78,13 @@ public class SlangDictionaryMenu extends JFrame {
         editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new EditSlangWord(slangWordList);
+                new EditSlangWord(new ArrayList<>(slangWordMap.values()));
             }
         });
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new DeleteSlangWord(slangWordList);
+                new DeleteSlangWord(slangWordMap);
             }
         });
 
@@ -93,8 +96,8 @@ public class SlangDictionaryMenu extends JFrame {
         setVisible(true);
     }
 
-    static List<SlangWord> loadSlangWords(String filename) {
-        List<SlangWord> slangWords = new ArrayList<>();
+    private static Map<String, SlangWord> loadSlangWords(String filename) {
+        Map<String, SlangWord> slangWords = new HashMap<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -107,7 +110,7 @@ public class SlangDictionaryMenu extends JFrame {
                     for (String def : definitions) {
                         definitionList.add(def.trim());
                     }
-                    slangWords.add(new SlangWord(word, definitionList));
+                    slangWords.put(word, new SlangWord(word, definitionList));
                 }
             }
         } catch (IOException e) {

@@ -3,8 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Phan Thiên Quân - 19127527
@@ -16,15 +15,11 @@ public class DeleteSlangWord extends JFrame {
     private JTextArea resultArea;
     private JButton deleteButton;
 
-    private List<SlangWord> slangWordList;
-
-    public DeleteSlangWord(List<SlangWord> slangWordList) {
+    public DeleteSlangWord(Map<String, SlangWord> slangWordMap) {
         setTitle("Delete Slang Word");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
-
-        this.slangWordList = slangWordList;
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
@@ -82,7 +77,7 @@ public class DeleteSlangWord extends JFrame {
         StringBuilder result = new StringBuilder();
         boolean found = false;
 
-        for (SlangWord slangWord : slangWordList) {
+        for (SlangWord slangWord : SlangDictionaryMenu.slangWordMap.values()) {
             if (slangWord.getWord().equalsIgnoreCase(searchTerm)) {
                 result.append("Slang Word: ").append(slangWord.getWord()).append("\n");
                 result.append("Definitions: ").append(String.join(", ", slangWord.getDefinition())).append("\n");
@@ -108,7 +103,7 @@ public class DeleteSlangWord extends JFrame {
             String searchTerm = searchField.getText().trim().toUpperCase();
             SlangWord selectedSlangWord = null;
 
-            for (SlangWord slangWord : slangWordList) {
+            for (SlangWord slangWord : SlangDictionaryMenu.slangWordMap.values()) {
                 if (slangWord.getWord().equalsIgnoreCase(searchTerm)) {
                     selectedSlangWord = slangWord;
                     break;
@@ -116,22 +111,22 @@ public class DeleteSlangWord extends JFrame {
             }
 
             if (selectedSlangWord != null) {
-                slangWordList.remove(selectedSlangWord);
-
-
+                SlangDictionaryMenu.slangWordMap.remove(selectedSlangWord.getWord());
                 saveSlangWordsToFile();
 
                 JOptionPane.showMessageDialog(this, "Slang word deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 searchField.setText("");
                 resultArea.setText("");
                 deleteButton.setEnabled(false);
+
+
             }
         }
     }
 
     private void saveSlangWordsToFile() {
         try (PrintWriter printWriter = new PrintWriter(new FileWriter("slang.txt"))) {
-            for (SlangWord slangWord : slangWordList) {
+            for (SlangWord slangWord : SlangDictionaryMenu.slangWordMap.values()) {
                 printWriter.print(slangWord.getWord() + "`");
                 printWriter.println(String.join("|", slangWord.getDefinition()));
             }
