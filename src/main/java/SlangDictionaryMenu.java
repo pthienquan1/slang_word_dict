@@ -36,6 +36,7 @@ public class SlangDictionaryMenu extends JFrame {
         JButton editButton = new JButton("Edit Slang word");
         JButton deleteButton = new JButton("Delete Slang word");
         JButton resetButton = new JButton("Reset");
+        JButton randomButton = new JButton("Random Slang word");
         // Add components to the panel
         panel.add(searchSlangButton);
         panel.add(searchDefinitionButton);
@@ -44,6 +45,7 @@ public class SlangDictionaryMenu extends JFrame {
         panel.add(editButton);
         panel.add(deleteButton);
         panel.add(resetButton);
+        panel.add(randomButton);
         // Set layout manager for the frame
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         add(panel);
@@ -95,6 +97,13 @@ public class SlangDictionaryMenu extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 resetSlangWordsToOriginal();
                 JOptionPane.showMessageDialog(SlangDictionaryMenu.this, "Slang words reset to original state.", "Reset", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        randomButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new RandomSlangWord(slangWordMap);
             }
         });
 
