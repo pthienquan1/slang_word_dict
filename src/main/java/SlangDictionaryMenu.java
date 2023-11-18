@@ -2,9 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,11 +17,14 @@ public class SlangDictionaryMenu extends JFrame {
     protected static Map<String, SlangWord> slangWordMap;
     private List<String> searchHistorySlangWord;
     private static List<String> searchHistoryDefinition;
+    private static Map<String, SlangWord> originalSlangWordMap;
     public SlangDictionaryMenu() {
         super("Slang Dictionary Menu");
 
         // Load slang words from the file
         slangWordMap = loadSlangWords("slang.txt");
+        originalSlangWordMap = new HashMap<>(slangWordMap);
+
         searchHistorySlangWord = new ArrayList<>();
         searchHistoryDefinition = new ArrayList<>();
         // Create components
@@ -34,6 +35,7 @@ public class SlangDictionaryMenu extends JFrame {
         JButton addSlangButton = new JButton("Add Slang");
         JButton editButton = new JButton("Edit Slang word");
         JButton deleteButton = new JButton("Delete Slang word");
+        JButton resetButton = new JButton("Reset");
         // Add components to the panel
         panel.add(searchSlangButton);
         panel.add(searchDefinitionButton);
@@ -41,6 +43,7 @@ public class SlangDictionaryMenu extends JFrame {
         panel.add(addSlangButton);
         panel.add(editButton);
         panel.add(deleteButton);
+        panel.add(resetButton);
         // Set layout manager for the frame
         setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
         add(panel);
@@ -87,6 +90,13 @@ public class SlangDictionaryMenu extends JFrame {
                 new DeleteSlangWord(slangWordMap);
             }
         });
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resetSlangWordsToOriginal();
+                JOptionPane.showMessageDialog(SlangDictionaryMenu.this, "Slang words reset to original state.", "Reset", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
 
         // Set frame properties
         setPreferredSize(new Dimension(600, 400));
@@ -118,6 +128,21 @@ public class SlangDictionaryMenu extends JFrame {
         }
 
         return slangWords;
+    }
+    private void saveSlangWordsToFile() {
+        try (PrintWriter printWriter = new PrintWriter(new FileWriter("slang.txt"))) {
+            for (SlangWord slangWord : slangWordMap.values()) {
+                printWriter.print(slangWord.getWord() + "`");
+                printWriter.println(String.join("|", slangWord.getDefinition()));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void resetSlangWordsToOriginal() {
+        slangWordMap.clear();
+        slangWordMap.putAll(originalSlangWordMap);
+        saveSlangWordsToFile();
     }
 
 

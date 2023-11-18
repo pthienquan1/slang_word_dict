@@ -733,7 +733,6 @@ PEWPEW`Laser sound
 TKO`Technical Knock Out
 TKT`Don't worry
 TKS`Thanks
-zxcvb`1
 PLMK`Please Let Me Know
 PLOX`Please
 DIMM`Dual In-line Memory Module
@@ -1279,7 +1278,6 @@ DFF`Don't Forget to Flush
 DFI`Don't Force It
 DFM`Dance Floor Makeout
 DFO`Done Fell Out
-AddNew1`1|2
 A1`Top quality
 DFS`Dating For Sport
 A3`Anywhere, Any time, Any place
@@ -1719,7 +1717,6 @@ UTE`Utility vehicle|pickup truck
 LALB`Laughing A Little Bit
 UTH`Up The Hoods
 VOIP`Voice Over IP
-ACK 1`Disgust1|frustration|Acknowledgement
 LU`Love You
 LV`Louis Vuitton|Las Vegas|Level
 LW`Lucky Win
@@ -2294,7 +2291,6 @@ OOSOOM`Out Of Sight, Out Of Mind
 RICK ROLL`Trick someone with a link to Rick Astley video
 WSWTA`What Shall We Talk About?
 SWYP`So What's Your Point?
-ABCC`11
 WAYDRN`What Are You Doing Right Now?
 CEEBS`CBB
 MEEP`An exclamation for any situation
@@ -6790,7 +6786,6 @@ TROLOL`LOLING at somebody who is TROLLING
 DINERO`Money
 LIKKLE`Little
 FELLER`Fellow|man
-aa1`1
 HALP`Help
 YIKES`shock|surprise
 SMIZE`Smile with your eyes
@@ -7124,6 +7119,7 @@ ACE`Excellent|great
 RDV`Rendez-Vous
 RDY`Ready
 BRAH`Bro|friend
+ACK`Disgust|frustration|Acknowledgement
 H1N1`Swine flu virus
 POPPING`Dance style
 ACP`Automatic Colt Pistol
@@ -7593,7 +7589,6 @@ TWOT`Total Waste Of Time
 SOOTB`Straight Out Of The Box
 STMF`Stay Thirsty My Friends
 OHAC`Own House And Car
-ABCC1`ABCC1
 SYTYCD`So You Think You Can Dance
 VLSI`Very Large-Scale Integration
 H2IK`Hell If I Know
