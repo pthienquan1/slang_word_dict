@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Dict_19127527:jar">
+    <output-path>$PROJECT_DIR$/Jar</output-path>
+    <root id="archive" name="Dict_19127527.jar">
+      <element id="module-output" name="Dict_19127527" />
+    </root>
+  </artifact>
+</component>

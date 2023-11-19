@@ -77,11 +77,14 @@ public class SearchDefinition extends JFrame {
         boolean foundMatch = false;
 
         for (SlangWord slangWord : slangWordMap.values()) {
-            if ( slangWord.getDefinition().contains(searchQuery) ) {
-                result.append("Slang word: ").append(slangWord.getWord()).append(":").append("\n");
-                result.append("Definition you searched: ").append(searchQuery).append("\n");
-                foundMatch = true;
-                break;
+            for (String definition : slangWord.getDefinition()) {
+                if ( definition.toLowerCase().contains(searchQuery.toLowerCase()) ) {
+                    result.append("- Slang word: ").append(slangWord.getWord()).append(":\n");
+                    result.append("- Definition contains the keyword: ").append(searchQuery).append("\n\n");
+                    result.append("--> Full Definition: ").append(SlangWord.asString(slangWord.getDefinition(), ", ")).append("\n\n");
+                    foundMatch = true;
+                    break; // Stop searching if a match is found in any definition
+                }
             }
         }
 
