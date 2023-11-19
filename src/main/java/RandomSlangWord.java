@@ -17,10 +17,10 @@ import java.util.Random;
 /**
  * Created by Phan Thiên Quân - 19127527
  * Date 11/18/2023 - 4:13 PM
- * Description: ...
+ * Description: Random Slang Word
  */
 public class RandomSlangWord extends JFrame {
-    private Map<String, SlangWord> slangWordMap;
+    private final Map<String, SlangWord> slangWordMap;
 
     public RandomSlangWord(Map<String, SlangWord> slangWordMap) {
         super("Random Slang Word");

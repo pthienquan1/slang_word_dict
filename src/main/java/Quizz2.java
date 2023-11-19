@@ -8,13 +8,13 @@ import java.util.List;
 /**
  * Created by Phan Thiên Quân - 19127527
  * Date 11/18/2023 - 10:02 PM
- * Description: ...
+ * Description: Quizz 2: 1 random definition and 4 random slang words
  */
 public class Quizz2 extends JFrame {
-    private Map<String, SlangWord> slangWordMap;
-    private JTextField definitionTextField;
-    private JButton[][] answerButtons;
-    private String[] answerOptions;
+    private final Map<String, SlangWord> slangWordMap;
+    private final JTextField definitionTextField;
+    private final JButton[][] answerButtons;
+    private final String[] answerOptions;
     private String currentDefinition;
     private int correctAnswerPosition;
 
@@ -116,13 +116,42 @@ public class Quizz2 extends JFrame {
         String resultMessage;
         if (selectedAnswer == correctAnswerPosition) {
             resultMessage = "Correct! '" + currentDefinition + "' means '" + answerOptions[correctAnswerPosition] + "'.";
+            JOptionPane.showMessageDialog(this, resultMessage, "Quiz Result", JOptionPane.INFORMATION_MESSAGE);
+
+            // Set the background color of the correct button to green
+            int row = correctAnswerPosition / 2;
+            int col = correctAnswerPosition % 2;
+            answerButtons[row][col].setBackground(Color.GREEN);
+
+            // Delay to show the green background before resetting
+            Timer timer = new Timer(1000, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Reset the background color of all buttons to default
+                    resetQuiz();
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
         } else {
             resultMessage = "Incorrect! Try again.";
-            int option = JOptionPane.showConfirmDialog(this, resultMessage, "Quiz Result", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            return;
+            JOptionPane.showMessageDialog(this, resultMessage, "Quiz Result", JOptionPane.ERROR_MESSAGE);
+
+            // Set the background color of the incorrect button to red
+            int row = selectedAnswer / 2;
+            int col = selectedAnswer % 2;
+            answerButtons[row][col].setBackground(Color.RED);
+        }
+    }
+
+    private void resetQuiz() {
+        // Reset the background color of all buttons to default
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                answerButtons[i][j].setBackground(null);
+            }
         }
 
-        JOptionPane.showMessageDialog(this, resultMessage, "Quiz Result", JOptionPane.INFORMATION_MESSAGE);
         // Reset the quiz
         dispose();
         new Quizz2(slangWordMap);

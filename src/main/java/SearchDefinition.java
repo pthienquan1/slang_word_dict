@@ -9,13 +9,13 @@ import java.util.Map;
 /**
  * Created by Phan Thiên Quân - 19127527
  * Date 11/14/2023 - 8:22 PM
- * Description: ...
+ * Description: Search Definition
  */
 public class SearchDefinition extends JFrame {
-    private JTextArea resultTextArea;
-    private JComboBox<String> searchHistoryComboBox;
-    private Map<String, SlangWord> slangWordMap;
-    private List<String> searchHistory;
+    private final JTextArea resultTextArea;
+    private final JComboBox<String> searchHistoryComboBox;
+    private final Map<String, SlangWord> slangWordMap;
+    private final List<String> searchHistory;
 
     public SearchDefinition(Map<String, SlangWord> slangWordMap, List<String> searchHistory) {
         super("Search Definition");
@@ -27,6 +27,7 @@ public class SearchDefinition extends JFrame {
         JTextField searchField = new JTextField(20);
         JButton searchButton = new JButton("Search");
         resultTextArea = new JTextArea(10, 30);
+        resultTextArea.setBorder(BorderFactory.createEmptyBorder(2, 2, 10, 10));
         JScrollPane scrollPane = new JScrollPane(resultTextArea);
 
         // Set layout manager for the frame
@@ -65,7 +66,7 @@ public class SearchDefinition extends JFrame {
 
         // Set frame properties
         pack();
-        setSize(380, 300);
+        setSize(520, 300);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);

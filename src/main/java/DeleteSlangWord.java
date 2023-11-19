@@ -8,12 +8,12 @@ import java.util.Map;
 /**
  * Created by Phan Thiên Quân - 19127527
  * Date 11/17/2023 - 1:34 PM
- * Description: ...
+ * Description: Delete Slang Word
  */
 public class DeleteSlangWord extends JFrame {
-    private JTextField searchField;
-    private JTextArea resultArea;
-    private JButton deleteButton;
+    private final JTextField searchField;
+    private final JTextArea resultArea;
+    private final JButton deleteButton;
 
     public DeleteSlangWord(Map<String, SlangWord> slangWordMap) {
         setTitle("Delete Slang Word");
@@ -112,26 +112,13 @@ public class DeleteSlangWord extends JFrame {
 
             if (selectedSlangWord != null) {
                 SlangDictionaryMenu.slangWordMap.remove(selectedSlangWord.getWord());
-                saveSlangWordsToFile();
+                FileHandler.saveSlangWordsToFile(SlangDictionaryMenu.slangWordMap);
 
                 JOptionPane.showMessageDialog(this, "Slang word deleted successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
                 searchField.setText("");
                 resultArea.setText("");
                 deleteButton.setEnabled(false);
-
-
             }
-        }
-    }
-
-    private void saveSlangWordsToFile() {
-        try (PrintWriter printWriter = new PrintWriter(new FileWriter("slang.txt"))) {
-            for (SlangWord slangWord : SlangDictionaryMenu.slangWordMap.values()) {
-                printWriter.print(slangWord.getWord() + "`");
-                printWriter.println(String.join("|", slangWord.getDefinition()));
-            }
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error occurred while saving slang words to file.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

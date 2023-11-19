@@ -11,14 +11,14 @@ import java.util.List;
 /**
  * Created by Phan Thiên Quân - 19127527
  * Date 11/14/2023 - 11:18 AM
- * Description: ...
+ * Description: Search Slang Word
  */
 public class SearchSlang extends JFrame {
-    private JTextField searchField;
-    private JTextArea resultArea;
-
-    private List<SlangWord> slangWordList;
+    private final JTextField searchField;
+    private final JTextArea resultArea;
+    private final List<SlangWord> slangWordList;
     private List<String> searchHistory;
+
     public SearchSlang(List<SlangWord> slangWordList) {
         super("Slang Dictionary");
 
@@ -31,6 +31,7 @@ public class SearchSlang extends JFrame {
         JButton searchButton = new JButton("Search");
         resultArea = new JTextArea(15, 30);
         resultArea.setEditable(false);
+        resultArea.setBorder(BorderFactory.createEmptyBorder(2, 2, 10, 10));
 
         // Add components to the panel
         panel.add(searchLabel);
@@ -58,22 +59,33 @@ public class SearchSlang extends JFrame {
     }
 
     private void performSearch() {
-        String searchTerm = searchField.getText().trim().toUpperCase();
+        String searchTerm = searchField.getText().trim();
         StringBuilder result = new StringBuilder();
 
         for (SlangWord slangWord : slangWordList) {
-            if (slangWord.getWord().toUpperCase().contains(searchTerm)) {
-                result.append(slangWord.getWord()).append(": ").append(SlangWord.asString(slangWord.getDefinition(), ", ")).append("\n");
+            List<String> definitions = slangWord.getDefinition();
+            if (slangWord.getWord().toUpperCase().contains(searchTerm.toUpperCase())) {
+                result.append(slangWord.getWord()).append(": ");
+                for (int i = 0; i < definitions.size(); i++) {
+                    result.append(definitions.get(i));
+                    if (i < definitions.size() - 1) {
+                        result.append(", ");
+                    }
+                }
+                result.append("\n");
             }
         }
 
-        if (result.length() ==0) {
+        if (result.length() == 0) {
             result.append("No matching words found.");
         }
 
         resultArea.setText(result.toString());
         searchHistory.add(searchTerm);
+        resultArea.setCaretPosition(0);
     }
+
+
     public void setSearchHistory(List<String> searchHistory) {
         this.searchHistory = searchHistory;
     }

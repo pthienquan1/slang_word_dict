@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by Phan Thiên Quân - 19127527
  * Date 11/15/2023 - 2:20 PM
- * Description: ...
+ * Description: History Search
  */
 public class HistorySearch extends JFrame {
     private List<String> historyList;
@@ -27,9 +27,9 @@ public class HistorySearch extends JFrame {
         StringBuilder sb = new StringBuilder();
         for (String history : historyList) {
             if (searchHistorySlang.contains(history)) {
-                sb.append("slang word searched: ");
+                sb.append(" - Slang word searched: ");
             } else if (searchHistoryDefinition.contains(history)) {
-                sb.append("Definition searched: ");
+                sb.append(" + Definition searched: ");
             }
             sb.append(history).append("\n");
         }

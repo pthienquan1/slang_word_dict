@@ -3,33 +3,35 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
 
 /**
  * Created by Phan Thiên Quân - 19127527
  * Date 11/16/2023 - 8:10 PM
- * Description: ...
+ * Description: Edit Slang Word
  */
 public class EditSlangWord extends JFrame {
-    private JTextField searchField;
-    private JTextArea resultArea;
-    private JTextField slangWordTextField;
-    private JTextField newSlangWordTextField;
-    private JTextArea definitionTextArea;
-    private JButton editButton;
+    private final JTextField searchField;
+    private final JTextArea resultArea;
+    private final JTextField slangWordTextField;
+    private final JTextField newSlangWordTextField;
+    private final JTextArea definitionTextArea;
+    private final JButton editButton;
 
     private List<SlangWord> slangWordList;
+    private Map<String, SlangWord> originalSlangWordMap;
+
     private SlangWord selectedSlangWord;
 
-    public EditSlangWord(List<SlangWord> slangWordList) {
+    public EditSlangWord(List<SlangWord> slangWordList, Map<String, SlangWord> originalSlangWordMap) {
         setTitle("Edit Slang Word");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(false);
         setLocationRelativeTo(null);
 
         this.slangWordList = slangWordList;
+        this.originalSlangWordMap = new HashMap<>(originalSlangWordMap);
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
@@ -162,15 +164,16 @@ public class EditSlangWord extends JFrame {
         }
 
         if (!newSlangWord.isEmpty() && !newDefinitions.isEmpty()) {
-            selectedSlangWord.setWord(newSlangWord);
-            selectedSlangWord.setDefinition(newDefinitions);
+            SlangWord updatedSlangWord = new SlangWord(newSlangWord, newDefinitions);
 
+            SlangDictionaryMenu.slangWordMap.remove(selectedSlangWord.getWord());
+
+            SlangDictionaryMenu.slangWordMap.put(newSlangWord, updatedSlangWord);
             try (PrintWriter printWriter = new PrintWriter(new FileWriter("slang.txt"))) {
                 for (SlangWord slangWord : SlangDictionaryMenu.slangWordMap.values()) {
                     printWriter.print(slangWord.getWord() + "`");
                     printWriter.println(String.join("|", slangWord.getDefinition()));
                 }
-
                 JOptionPane.showMessageDialog(this, "Slang word edited successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "Error occurred while editing slang word.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -184,6 +187,4 @@ public class EditSlangWord extends JFrame {
             editButton.setEnabled(false);
         }
     }
-
-
 }

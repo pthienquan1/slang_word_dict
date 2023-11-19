@@ -11,12 +11,12 @@ import java.util.Map;
 /**
  * Created by Phan Thiên Quân - 19127527
  * Date 11/16/2023 - 11:25 AM
- * Description: ...
+ * Description: Add Slang Word
  */
 public class AddSlangWord extends JFrame {
-    private JTextField wordTextField;
-    private List<JTextField> definitionTextFields;
-    private JPanel definitionsPanel;
+    private final JTextField wordTextField;
+    private final List<JTextField> definitionTextFields;
+    private final JPanel definitionsPanel;
 
     public AddSlangWord() {
         super("Add Slang Word");
@@ -134,24 +134,13 @@ public class AddSlangWord extends JFrame {
     private void overwriteSlangWord(String word, List<String> definitions) {
         SlangWord existingSlangWord = SlangDictionaryMenu.slangWordMap.get(word);
         existingSlangWord.setDefinition(definitions);
-        saveSlangWords("slang.txt");
+        FileHandler.saveSlangWordsToFile(SlangDictionaryMenu.slangWordMap);
     }
 
     private void addNewSlangWord(String word, List<String> definitions) {
         SlangWord newSlangWord = new SlangWord(word, definitions);
         SlangDictionaryMenu.slangWordMap.put(word, newSlangWord);
-        saveSlangWords("slang.txt");
-    }
-
-    private void saveSlangWords(String filename) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
-            for (SlangWord slangWord : SlangDictionaryMenu.slangWordMap.values()) {
-                writer.write(slangWord.getWord() + "`" + String.join("|", slangWord.getDefinition()));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FileHandler.saveSlangWordsToFile(SlangDictionaryMenu.slangWordMap);
     }
 
     private void clearFields() {
